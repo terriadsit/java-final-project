@@ -6,10 +6,19 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Restaurant {
+
     @Id
     @GeneratedValue
-       private Long id;
+    private Long id;
     private String name;
+
+    public Restaurant(Restaurant restaurant) {
+        this.name = restaurant.name;
+    }
+
+    public Restaurant(String name) {
+        this.name = name;
+    }
     
     public String getName() {
         return name;
