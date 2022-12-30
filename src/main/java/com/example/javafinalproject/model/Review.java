@@ -18,7 +18,7 @@ public class Review {
     private int egg;
     private int dairy;
     private String commentary;
-    private Status status;
+    private String status;
 
     public Review(Review review) {
         this.name = review.getName();
@@ -29,7 +29,7 @@ public class Review {
         this.status = review.getStatus();
     }
 
-    public Review(String name, int peanut, int egg, int dairy, String commentary, Status status) {
+    public Review(String name, int peanut, int egg, int dairy, String commentary, String status) {
         this.name = name;
         this.peanut = peanut;
         this.egg = egg;

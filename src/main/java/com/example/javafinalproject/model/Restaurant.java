@@ -15,12 +15,17 @@ public class Restaurant {
     @GeneratedValue
     private Long id;
     private String name;
+    private String zip;
     private Float eggReview;
     private Float dairyReview;
     private Float peanutReview;
 
-    public Restaurant(String name, Float eggRevFloat, Float dairyReview, Float peanutReview) {
+    public Restaurant(String name, String zip, Float eggReview, Float dairyReview, Float peanutReview) {
         this.name = name;
+        this.zip = zip;
+        this.eggReview = eggReview;
+        this.dairyReview = dairyReview;
+        this.peanutReview = peanutReview;
     }
     
   
