@@ -131,6 +131,27 @@ public class ProjectController {
             return updatedPerson; 
         }
      }
+
+     @PostMapping("/review/add") 
+     public Review addReview(@RequestBody Review review) {
+        String displayName = review.getDisplayName();
+        if (displayName != null ){
+            Optional<Person> personOptional = personRepository.findByDisplayName(displayName);
+            if (!personOptional.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This displayName is not valid");
+            }
+        }
+        Long restaurantId = review.getRestaurantId();
+        if (restaurantId != null ){
+            Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantId);
+            if (!restaurantOptional.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This restaurant id is not valid");
+            }
+        }
+        Review newReview = reviewRepository.save(review);
+        return newReview;
+    }
+     
  
     
 }

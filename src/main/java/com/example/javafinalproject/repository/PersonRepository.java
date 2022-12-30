@@ -7,8 +7,5 @@ import com.example.javafinalproject.model.Person;
 
 public interface PersonRepository extends CrudRepository <Person, Long> {
     Optional<Person> findById(Long id);
- 
-    
     Optional<Person> findByDisplayName(String displayName);
-  
 }
