@@ -1,5 +1,7 @@
 package com.example.javafinalproject.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
 @Entity
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Person {
     
 

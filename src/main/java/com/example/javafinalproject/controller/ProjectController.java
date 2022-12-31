@@ -39,7 +39,7 @@ public class ProjectController {
     public Restaurant getRestaurant(@PathVariable Long id) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
         if (!restaurantOptional.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No such restaurant");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such restaurant");
         } else {
             return restaurantOptional.get();
         }
@@ -75,7 +75,7 @@ public class ProjectController {
     public Person getPerson(@RequestParam(name="displayName", required=false) String displayName) {
         Optional<Person> personOptional = personRepository.findByDisplayName(displayName);
         if (!personOptional.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No such person"); 
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such person"); 
         } else {
             Person person = personOptional.get();
             return person;
@@ -150,6 +150,54 @@ public class ProjectController {
         }
         Review newReview = reviewRepository.save(review);
         return newReview;
+    }
+
+    @GetMapping("/review/{id}")
+    public List<Review> getReviewsByRestaurant(@PathVariable Long id) {
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
+        if (!restaurantOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This restaurant id is not valid"); 
+        } else {
+            List<Review> reviews = reviewRepository.findByRestaurantId(id);
+            return reviews;
+        }
+    }
+
+    @GetMapping("review/admin/{id}") 
+    public List<Review> getReviewsForAdmin(@PathVariable Long id) {
+         if (isAdmin(id)) {
+            List<Review> pendingReviews = reviewRepository.findByStatus("PENDING");
+            return pendingReviews;
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This person is not an admin"); 
+        }
+    }
+
+    @PutMapping("review/admin/{id}")
+    public Review updateReviewStatus(@PathVariable Long id, @RequestBody Review review) {
+        if (isAdmin(id)) {
+            Optional<Review> reviewToUpdateOptional = reviewRepository.findById(review.getId());
+            if (!reviewToUpdateOptional.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "review is not available"); 
+            } else {
+                Review reviewToUpdate = reviewToUpdateOptional.get();
+                reviewToUpdate.setStatus(review.getStatus());
+                Review updatedReview = reviewRepository.save(reviewToUpdate);
+                return updatedReview;
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This person is not an admin"); 
+        }
+    }
+
+    public Boolean isAdmin(Long id) {
+        Optional<Person> personOptional = personRepository.findById(id);
+        if (!personOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This person id is not valid"); 
+        } else {
+            Person person = personOptional.get();
+            return person.getAdmin();
+        }
     }
      
  
