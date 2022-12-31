@@ -1,5 +1,7 @@
 package com.example.javafinalproject.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "zip" }) })
 @Getter @Setter @NoArgsConstructor
 public class Restaurant {
@@ -21,11 +24,11 @@ public class Restaurant {
     private Long id;
     private String name;
     private String zip;
-    private Float eggReview;
-    private Float dairyReview;
-    private Float peanutReview;
+    private double eggReview;
+    private double dairyReview;
+    private double peanutReview;
 
-    public Restaurant(String name, String zip, Float eggReview, Float dairyReview, Float peanutReview) {
+    public Restaurant(String name, String zip, double eggReview, double dairyReview, double peanutReview) {
         this.name = name;
         this.zip = zip;
         this.eggReview = eggReview;

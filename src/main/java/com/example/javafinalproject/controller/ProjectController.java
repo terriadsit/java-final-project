@@ -1,5 +1,6 @@
 package com.example.javafinalproject.controller;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -183,6 +184,10 @@ public class ProjectController {
                 Review reviewToUpdate = reviewToUpdateOptional.get();
                 reviewToUpdate.setStatus(review.getStatus());
                 Review updatedReview = reviewRepository.save(reviewToUpdate);
+                log.info("before if in review update" + updatedReview.getStatus());
+                if (updatedReview.getStatus().equals("APPROVED")) {
+                    updateRestaurantReviewValues(reviewToUpdate.getRestaurantId());
+                }
                 return updatedReview;
             }
         } else {
@@ -197,6 +202,58 @@ public class ProjectController {
         } else {
             Person person = personOptional.get();
             return person.getAdmin();
+        }
+    }
+
+    public void updateRestaurantReviewValues(Long id) {
+        List<Review> reviews = reviewRepository.findByRestaurantIdAndStatus(id, "APPROVED");
+      
+        double egg = 0;
+        double dairy = 0;
+        double peanut = 0;
+        int eggCount = 0;
+        int dairyCount = 0;
+        int peanutCount = 0;
+        for (Review review : reviews ) {
+            int eggReview = review.getEgg();
+            int dairyReview = review.getDairy();
+            int peanutReview = review.getPeanut();
+            if (eggReview != 0) {
+                egg += eggReview;
+                eggCount++;
+            }
+            if (peanutReview != 0) {
+                peanut += peanutReview;
+                peanutCount++;
+            }
+            if (dairyReview != 0) {
+                dairy += dairyReview;
+                dairyCount++;
+            }
+            
+            log.info("'update Restaurant egg" + eggReview + "dairy" + dairyReview  + "peanut" + peanutReview);
+        }
+        if (eggCount > 0) {
+            egg /= eggCount;
+        }
+        if (dairyCount > 0) {
+            dairy /= dairyCount;
+        }
+        if (peanutCount > 0) {
+            peanut /= peanutCount;
+        }
+        Optional<Restaurant> restaurantToUpdateOptional = restaurantRepository.findById(id);
+        if (!restaurantToUpdateOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant not found");
+        } else {
+            double formattedEgg =Math.round(egg*100.0)/100.0;
+            double formattedDairy = Math.round(dairy*100.0)/100.0;
+            double formattedPeanut = Math.round(peanut*100.0)/100.0;
+            Restaurant restaurantToUpdate = restaurantToUpdateOptional.get();
+            restaurantToUpdate.setEggReview(formattedEgg);
+            restaurantToUpdate.setDairyReview(formattedDairy);
+            restaurantToUpdate.setPeanutReview(formattedPeanut);
+            restaurantRepository.save(restaurantToUpdate);
         }
     }
      

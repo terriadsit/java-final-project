@@ -1,5 +1,7 @@
 package com.example.javafinalproject.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter @Setter @NoArgsConstructor
 
 public class Review {

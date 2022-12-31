@@ -12,4 +12,5 @@ public interface RestaurantRepository extends CrudRepository<Restaurant, Long> {
     List<Restaurant> findByEggReviewIsNotNullAndZipIsOrderByEggReviewDesc(String zip);
     List<Restaurant> findByDairyReviewIsNotNullAndZipIsOrderByDairyReviewDesc(String zip);
     List<Restaurant> findByPeanutReviewIsNotNullAndZipIsOrderByPeanutReviewDesc(String zip);
+  
  }
